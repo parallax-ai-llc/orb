@@ -5068,7 +5068,7 @@ export class DeckGLMap {
     toggles.style.setProperty('left', '10px', 'important');
     toggles.style.setProperty('top', '63px', 'important');
     toggles.style.setProperty('bottom', 'auto', 'important');
-    toggles.style.setProperty('z-index', '9999', 'important');
+    toggles.style.setProperty('z-index', '60', 'important');
     toggles.style.setProperty('display', 'flex', 'important');
     toggles.style.setProperty('flex-direction', 'column', 'important');
     toggles.style.setProperty('pointer-events', 'auto', 'important');

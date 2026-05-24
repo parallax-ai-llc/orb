@@ -1141,19 +1141,21 @@ export class App {
     this.state.signalModal.setLocationClickHandler((lat, lon) => {
       this.state.map?.setCenter(lat, lon, 4);
     });
-    if (!this.state.isMobile) {
-      this.state.findingsBadge = new IntelligenceGapBadge();
-      this.state.findingsBadge.setOnSignalClick((signal) => {
-        if (this.state.countryBriefPage?.isVisible()) return;
-        if (localStorage.getItem('wm-settings-open') === '1') return;
-        this.state.signalModal?.showSignal(signal);
-      });
-      this.state.findingsBadge.setOnAlertClick((alert) => {
-        if (this.state.countryBriefPage?.isVisible()) return;
-        if (localStorage.getItem('wm-settings-open') === '1') return;
-        this.state.signalModal?.showAlert(alert);
-      });
-    }
+    // Findings badge is created on every form factor. On mobile the badge's
+    // visible button (inside .header-right) is hidden by base CSS, but the
+    // mobile header's orb-alert-btn delegates clicks to it and the dropdown
+    // is re-parented to <body> in event-handlers.
+    this.state.findingsBadge = new IntelligenceGapBadge();
+    this.state.findingsBadge.setOnSignalClick((signal) => {
+      if (this.state.countryBriefPage?.isVisible()) return;
+      if (localStorage.getItem('wm-settings-open') === '1') return;
+      this.state.signalModal?.showSignal(signal);
+    });
+    this.state.findingsBadge.setOnAlertClick((alert) => {
+      if (this.state.countryBriefPage?.isVisible()) return;
+      if (localStorage.getItem('wm-settings-open') === '1') return;
+      this.state.signalModal?.showAlert(alert);
+    });
 
     if (!this.state.isMobile) {
       initBreakingNewsAlerts();

@@ -1853,7 +1853,7 @@ export class GlobeMap {
     el.style.setProperty('left', '10px', 'important');
     el.style.setProperty('top', '63px', 'important');
     el.style.setProperty('bottom', 'auto', 'important');
-    el.style.setProperty('z-index', '9999', 'important');
+    el.style.setProperty('z-index', '60', 'important');
     el.style.setProperty('display', 'flex', 'important');
     el.style.setProperty('flex-direction', 'column', 'important');
     el.style.setProperty('pointer-events', 'auto', 'important');

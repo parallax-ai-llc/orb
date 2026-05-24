@@ -358,15 +358,45 @@ export class EventHandlerManager implements AppModule {
       if (intelBadge) {
         intelBadge.click();
       }
-      // Reposition dropdown below the bell on the next frame so layout
-      // sees the .open class first.
+      // The badge lives inside `.header-right` which is display:none on
+      // mobile — so its child dropdown is invisible too. Lift the
+      // dropdown to <body> on first open, then position it via fixed
+      // coordinates anchored to the visible bell. Sync display with the
+      // badge's open/closed state via MutationObserver since the source
+      // component just toggles a class.
       requestAnimationFrame(() => {
-        const dropdown = document.querySelector<HTMLElement>('.intel-findings-dropdown.open');
+        const dropdown = document.querySelector<HTMLElement>('.intel-findings-dropdown');
         if (!dropdown) return;
+        if (dropdown.parentElement !== document.body) {
+          document.body.appendChild(dropdown);
+          new MutationObserver(() => {
+            const open = dropdown.classList.contains('open');
+            dropdown.style.setProperty('display', open ? 'block' : 'none', 'important');
+          }).observe(dropdown, { attributes: true, attributeFilter: ['class'] });
+        }
         const r = bell.getBoundingClientRect();
-        dropdown.style.top = `${r.bottom + 6}px`;
-        dropdown.style.right = `${Math.max(8, window.innerWidth - r.right)}px`;
-        dropdown.style.left = 'auto';
+        const isNarrow = window.innerWidth < 720;
+        dropdown.style.setProperty('position', 'fixed', 'important');
+        dropdown.style.setProperty('top', `${r.bottom + 6}px`, 'important');
+        if (isNarrow) {
+          // Span the viewport with a small inset so it never clips. Anchor
+          // both edges and clear width so left/right govern the box.
+          dropdown.style.setProperty('left', '8px', 'important');
+          dropdown.style.setProperty('right', '8px', 'important');
+          dropdown.style.setProperty('width', 'auto', 'important');
+        } else {
+          dropdown.style.setProperty('right', `${Math.max(8, window.innerWidth - r.right)}px`, 'important');
+          dropdown.style.setProperty('left', 'auto', 'important');
+          dropdown.style.setProperty('width', '380px', 'important');
+        }
+        dropdown.style.setProperty('max-height', `calc(100vh - ${r.bottom + 24}px)`, 'important');
+        dropdown.style.setProperty('overflow-y', 'auto', 'important');
+        dropdown.style.setProperty('z-index', '1500', 'important');
+        dropdown.style.setProperty(
+          'display',
+          dropdown.classList.contains('open') ? 'block' : 'none',
+          'important',
+        );
       });
     });
     // Orb LAYERS rail — wired to the real MapLayers system.

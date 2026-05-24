@@ -1230,6 +1230,19 @@ body {
   display: block !important;
   position: fixed !important;
 }
+/* Match the top-nav navy so the dropdown reads as the same surface family. */
+.intel-findings-dropdown {
+  background: #08101b !important;
+  border: 1px solid var(--pxm-line, rgba(79,209,228,0.18)) !important;
+}
+.intel-findings-dropdown .findings-header,
+.intel-findings-dropdown .findings-content,
+.intel-findings-dropdown .popup-toggle-row,
+.intel-findings-dropdown .finding-item,
+.intel-findings-dropdown .findings-more,
+.intel-findings-dropdown .findings-empty {
+  background: #08101b !important;
+}
 .orb-alert-dot {
   position: absolute;
   top: 2px;

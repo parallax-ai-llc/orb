@@ -208,7 +208,7 @@ export class MapComponent {
     togglesEl.style.setProperty('left', '10px', 'important');
     togglesEl.style.setProperty('top', '63px', 'important');
     togglesEl.style.setProperty('bottom', 'auto', 'important');
-    togglesEl.style.setProperty('z-index', '9999', 'important');
+    togglesEl.style.setProperty('z-index', '60', 'important');
     togglesEl.style.setProperty('display', 'flex', 'important');
     togglesEl.style.setProperty('flex-direction', 'column', 'important');
     togglesEl.style.setProperty('pointer-events', 'auto', 'important');
