@@ -657,12 +657,6 @@ export interface MapLayers {
   commodityHubs: boolean;
   // Gulf FDI layers
   gulfInvestments: boolean;
-  // Happy variant layers
-  positiveEvents: boolean;
-  kindness: boolean;
-  happiness: boolean;
-  speciesRecovery: boolean;
-  renewableInstallations: boolean;
   // Trade route layers
   tradeRoutes: boolean;
   // Iran attacks layer

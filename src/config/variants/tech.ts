@@ -254,13 +254,7 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   centralBanks: false,
   commodityHubs: false,
   gulfInvestments: false,
-  // Happy variant layers
-  positiveEvents: false,
-  kindness: false,
-  happiness: false,
-  speciesRecovery: false,
-  renewableInstallations: false,
-  tradeRoutes: false,
+  // Happy variant layers  tradeRoutes: false,
   iranAttacks: false,
   ciiChoropleth: false,
   resilienceScore: false,
@@ -316,13 +310,7 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   centralBanks: false,
   commodityHubs: false,
   gulfInvestments: false,
-  // Happy variant layers
-  positiveEvents: false,
-  kindness: false,
-  happiness: false,
-  speciesRecovery: false,
-  renewableInstallations: false,
-  tradeRoutes: false,
+  // Happy variant layers  tradeRoutes: false,
   iranAttacks: false,
   ciiChoropleth: false,
   resilienceScore: false,

@@ -694,12 +694,6 @@ export class DataLoaderManager implements AppModule {
           await this.loadTechEvents();
           console.log('[loadDataForLayer] techEvents loaded');
           break;
-        case 'positiveEvents':
-          await this.loadPositiveEvents();
-          break;
-        case 'kindness':
-          this.loadKindnessData();
-          break;
         case 'iranAttacks':
           await this.loadIranEvents();
           break;
@@ -1251,14 +1245,7 @@ export class DataLoaderManager implements AppModule {
       insightsPanel?.updateInsights([]);
     }
 
-    // Happy variant: run multi-stage positive news pipeline + map layers
-    if (SITE_VARIANT === 'happy') {
-      await this.loadHappySupplementaryAndRender();
-      await Promise.allSettled([
-        this.ctx.mapLayers.positiveEvents ? this.loadPositiveEvents() : Promise.resolve(),
-        this.ctx.mapLayers.kindness ? Promise.resolve(this.loadKindnessData()) : Promise.resolve(),
-      ]);
-    }
+    // Happy variant removed in Orb fork.
   }
 
   async loadStockAnalysis(): Promise<void> {

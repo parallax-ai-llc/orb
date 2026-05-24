@@ -3,7 +3,7 @@ import type { MapLayers } from '@/types';
 import { isDesktopRuntime } from '@/services/runtime';
 
 export type MapRenderer = 'flat' | 'globe';
-export type MapVariant = 'full' | 'tech' | 'finance' | 'happy' | 'commodity' | 'energy';
+export type MapVariant = 'full' | 'tech' | 'finance' | 'commodity' | 'energy';
 
 const _desktop = isDesktopRuntime();
 
@@ -85,11 +85,6 @@ export const LAYER_REGISTRY: Record<keyof MapLayers, LayerDefinition> = {
   centralBanks:             def('centralBanks',             '&#127974;', 'centralBanks',             'Central Banks'),
   commodityHubs:            def('commodityHubs',            '&#128230;', 'commodityHubs',            'Commodity Hubs'),
   gulfInvestments:          def('gulfInvestments',          '&#127760;', 'gulfInvestments',          'GCC Investments'),
-  positiveEvents:           def('positiveEvents',           '&#127775;', 'positiveEvents',           'Positive Events'),
-  kindness:                 def('kindness',                 '&#128154;', 'kindness',                 'Acts of Kindness'),
-  happiness:                def('happiness',                '&#128522;', 'happiness',                'World Happiness'),
-  speciesRecovery:          def('speciesRecovery',          '&#128062;', 'speciesRecovery',          'Species Recovery'),
-  renewableInstallations:   def('renewableInstallations',   '&#9889;',   'renewableInstallations',   'Clean Energy'),
   miningSites:              def('miningSites',              '&#128301;', 'miningSites',              'Mining Sites'),
   processingPlants:         def('processingPlants',         '&#127981;', 'processingPlants',         'Processing Plants'),
   commodityPorts:           def('commodityPorts',           '&#9973;',   'commodityPorts',           'Commodity Ports'),
@@ -129,10 +124,6 @@ const VARIANT_LAYER_ORDER: Record<MapVariant, Array<keyof MapLayers>> = {
     'gulfInvestments', 'tradeRoutes', 'cables', 'pipelines',
     'outages', 'weather', 'economic', 'waterways',
     'natural', 'cyberThreats', 'sanctions', 'dayNight',
-  ],
-  happy: [
-    'positiveEvents', 'kindness', 'happiness', 'resilienceScore',
-    'speciesRecovery', 'renewableInstallations',
   ],
   commodity: [
     'miningSites', 'processingPlants', 'commodityPorts', 'commodityHubs',
@@ -238,10 +229,7 @@ export const LAYER_SYNONYMS: Record<string, Array<keyof MapLayers>> = {
   demonstration: ['protests'],
   oil: ['pipelines', 'commodityHubs'],
   gas: ['pipelines'],
-  energy: ['pipelines', 'renewableInstallations'],
-  solar: ['renewableInstallations'],
-  wind: ['renewableInstallations'],
-  green: ['renewableInstallations', 'speciesRecovery'],
+  energy: ['pipelines'],
   money: ['economic', 'financialCenters', 'stockExchanges'],
   bank: ['centralBanks', 'financialCenters'],
   stock: ['stockExchanges'],
@@ -255,10 +243,6 @@ export const LAYER_SYNONYMS: Record<string, Array<keyof MapLayers>> = {
   mineral: ['minerals', 'miningSites'],
   mining: ['miningSites'],
   port: ['commodityPorts'],
-  happy: ['happiness', 'kindness', 'positiveEvents'],
-  good: ['positiveEvents', 'kindness'],
-  animal: ['speciesRecovery'],
-  wildlife: ['speciesRecovery'],
   gulf: ['gulfInvestments'],
   gcc: ['gulfInvestments'],
   sanction: ['sanctions'],

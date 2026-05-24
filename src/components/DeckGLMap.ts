@@ -1565,11 +1565,11 @@ export class DeckGLMap {
     // cached but 0 rendered because the newest CDC item was 11d old.
     const filteredDiseaseOutbreaks = mapLayers.diseaseOutbreaks ? this.diseaseOutbreaks : [];
     const filteredRadiationObservations = mapLayers.radiationWatch ? this.filterByTimeCached(this.radiationObservations, (obs) => obs.observedAt) : [];
-    const filteredPositiveEvents = mapLayers.positiveEvents ? this.filterByTimeCached(this.positiveEvents, (e) => e.timestamp) : [];
+    const filteredPositiveEvents: typeof this.positiveEvents = [];
     const filteredIranEvents = mapLayers.iranAttacks ? this.filterByTimeCached(this.iranEvents, (e) => e.timestamp) : [];
     const filteredFirmsFireData = mapLayers.fires ? this.filterByTimeCached(this.firmsFireData, (d) => d.acq_date) : [];
     const filteredTrafficAnomalies = mapLayers.outages ? this.filterByTimeCached(this.trafficAnomalies, (a) => a.startDate) : [];
-    const filteredKindnessPoints = mapLayers.kindness ? this.filterByTimeCached(this.kindnessPoints, (p) => p.timestamp) : [];
+    const filteredKindnessPoints: typeof this.kindnessPoints = [];
     const filteredImageryScenes = mapLayers.satellites ? this.filterByTimeCached(this.imageryScenes, (s) => s.datetime) : [];
     const filteredWeatherAlerts = mapLayers.weather ? this.filterByTimeCached(this.weatherAlerts, (alert) => alert.onset) : [];
     const filteredOutages = mapLayers.outages ? this.filterByTimeCached(this.outages, (outage) => outage.pubDate) : [];
@@ -1938,21 +1938,9 @@ export class DeckGLMap {
       layers.push(this.createGulfInvestmentsLayer());
     }
 
-    // Positive events layer (happy variant)
-    if (mapLayers.positiveEvents && filteredPositiveEvents.length > 0) {
-      layers.push(...this.createPositiveEventsLayers(filteredPositiveEvents));
-    }
+    // Happy-variant layers (positiveEvents, kindness, happiness) removed in Orb fork.
+    void filteredPositiveEvents; void filteredKindnessPoints;
 
-    // Kindness layer (happy variant -- green baseline pulses + real kindness events)
-    if (mapLayers.kindness && filteredKindnessPoints.length > 0) {
-      layers.push(...this.createKindnessLayers(filteredKindnessPoints));
-    }
-
-    // Phase 8: Happiness choropleth (rendered below point markers)
-    if (mapLayers.happiness) {
-      const choropleth = this.createHappinessChoroplethLayer();
-      if (choropleth) layers.push(choropleth);
-    }
     // CII choropleth (country instability heat-map)
     if (mapLayers.ciiChoropleth) {
       const ciiLayer = this.createCIIChoroplethLayer();
@@ -1970,14 +1958,7 @@ export class DeckGLMap {
     // Scenario heat layer (affected countries tint)
     const scenarioHeat = this.scenarioState ? this.createScenarioHeatLayer() : null;
     if (scenarioHeat) layers.push(scenarioHeat);
-    // Phase 8: Species recovery zones
-    if (mapLayers.speciesRecovery && this.speciesRecoveryZones.length > 0) {
-      layers.push(this.createSpeciesRecoveryLayer());
-    }
-    // Phase 8: Renewable energy installations
-    if (mapLayers.renewableInstallations && this.renewableInstallations.length > 0) {
-      layers.push(this.createRenewableInstallationsLayer());
-    }
+    // Species recovery + renewables layers (happy variant) removed in Orb fork.
 
     if (mapLayers.satellites && filteredImageryScenes.length > 0 && !this.satelliteImageryLayerFailed) {
       layers.push(this.createImageryFootprintLayer(filteredImageryScenes));
@@ -5378,22 +5359,7 @@ export class DeckGLMap {
           { shape: shapes.circle('rgb(241, 196, 15)'), label: t('components.deckgl.legend.diseaseWatch'), layerKey: 'diseaseOutbreaks' },
           ...resilienceLegendItems,
         ]
-        : SITE_VARIANT === 'happy'
-          ? [
-            { shape: shapes.circle('rgb(34, 197, 94)'), label: 'Positive Event', layerKey: 'positiveEvents' },
-            { shape: shapes.circle('rgb(234, 179, 8)'), label: 'Breakthrough', layerKey: 'positiveEvents' },
-            { shape: shapes.circle('rgb(74, 222, 128)'), label: 'Act of Kindness', layerKey: 'kindness' },
-            { shape: shapes.circle('rgb(255, 100, 50)'), label: 'Natural Event', layerKey: 'natural' },
-            { shape: shapes.square('rgb(34, 180, 100)'), label: 'Happy Country', layerKey: 'happiness' },
-            { shape: shapes.circle('rgb(74, 222, 128)'), label: 'Species Recovery Zone', layerKey: 'speciesRecovery' },
-            { shape: shapes.circle('rgb(255, 200, 50)'), label: 'Renewable Installation', layerKey: 'renewableInstallations' },
-            { shape: shapes.circle('rgb(160, 100, 255)'), label: t('components.deckgl.legend.aircraft'), layerKey: 'flights' },
-            { shape: shapes.circle('rgb(231, 76, 60)'), label: t('components.deckgl.legend.diseaseAlert'), layerKey: 'diseaseOutbreaks' },
-            { shape: shapes.circle('rgb(230, 126, 34)'), label: t('components.deckgl.legend.diseaseWarning'), layerKey: 'diseaseOutbreaks' },
-            { shape: shapes.circle('rgb(241, 196, 15)'), label: t('components.deckgl.legend.diseaseWatch'), layerKey: 'diseaseOutbreaks' },
-            ...resilienceLegendItems,
-          ]
-          : SITE_VARIANT === 'commodity'
+        : SITE_VARIANT === 'commodity'
             ? [
               { shape: shapes.hexagon(isLight ? 'rgb(180, 120, 0)' : 'rgb(255, 200, 0)'), label: t('components.deckgl.legend.commodityHub'), layerKey: 'commodityHubs' },
               { shape: shapes.circle('rgb(180, 80, 80)'), label: t('components.deckgl.legend.miningSite'), layerKey: 'miningSites' },

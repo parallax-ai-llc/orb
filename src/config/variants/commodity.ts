@@ -102,13 +102,7 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   financialCenters: false,
   centralBanks: false,
   gulfInvestments: false,
-  // Happy variant layers
-  positiveEvents: false,
-  kindness: false,
-  happiness: false,
-  speciesRecovery: false,
-  renewableInstallations: false,
-  // Overlay
+  // Happy variant layers  // Overlay
   dayNight: false,
   cyberThreats: false,
   // Additional required properties
@@ -167,13 +161,7 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   stockExchanges: false,
   financialCenters: false,
   centralBanks: false,
-  gulfInvestments: false,
-  positiveEvents: false,
-  kindness: false,
-  happiness: false,
-  speciesRecovery: false,
-  renewableInstallations: false,
-  dayNight: false,
+  gulfInvestments: false,  dayNight: false,
   cyberThreats: false,
   // Additional required properties
 

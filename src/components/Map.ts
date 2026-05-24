@@ -407,9 +407,7 @@ export class MapComponent {
       'sanctions', 'economic', 'waterways',               // geopolitical/economic
       'natural', 'weather',                               // natural events
     ];
-    const happyLayers: (keyof MapLayers)[] = [
-      'positiveEvents', 'kindness', 'happiness', 'speciesRecovery', 'renewableInstallations',
-    ];
+    const happyLayers: (keyof MapLayers)[] = [];
     // Energy variant — SVG/mobile fallback. Only include keys that actually render
     // in this file (commodityPorts/climate/tradeRoutes/resilienceScore/dayNight do
     // not, so they're omitted). Mirrors VARIANT_LAYER_ORDER.energy in
