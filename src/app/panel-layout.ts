@@ -541,9 +541,17 @@ export class PanelLayoutManager implements AppModule {
               <span class="variant-label">Good News</span>
             </a>`;
       })()}</div>
-          <div class="orb-brand-block">
-            <span class="logo">ORB</span>
-          </div>
+          <span class="orb-topnav-divider" aria-hidden="true"></span>
+          <a class="orb-brand-block" href="/" aria-label="ORB">
+            <img class="orb-brand-logo-img" src="/favico/apple-touch-icon.png" alt="" width="26" height="26" />
+            <span class="orb-brand-text">
+              <span class="logo orb-brand-wordmark">ORB</span>
+              <span class="orb-brand-tagline">
+                <span class="orb-brand-tagline-dot" aria-hidden="true"></span>
+                <span class="orb-brand-tagline-text">LIVE · <span id="orbHeaderClock">··:·· UTC</span></span>
+              </span>
+            </span>
+          </a>
           <span class="version">v${__APP_VERSION__}</span>${BETA_MODE ? '<span class="beta-badge">BETA</span>' : ''}
           <a href="https://hansanghoon.com/" target="_blank" rel="noopener" class="credit-link">
             <span class="credit-text">@sanghoon</span>
@@ -571,12 +579,15 @@ export class PanelLayoutManager implements AppModule {
               <option value="oceania">${t('components.deckgl.views.oceania')}</option>
             </select>
           </div>
-          <button class="mobile-search-btn" id="mobileSearchBtn" aria-label="${t('header.search')}">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </button>
         </div>
         <div class="header-right">
+          <button class="search-btn" id="searchBtn"><kbd>⌘K</kbd> ${t('header.search')}</button>
+        </div>
+        <div class="orb-header-actions">
           ${this.ctx.isDesktopApp ? '' : `<button class="fullscreen-btn" id="fullscreenBtn" title="${t('header.fullscreen')}"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg></button>`}
+          <button class="orb-header-search-btn" id="headerSearchBtn" title="${t('header.search')}" aria-label="${t('header.search')}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
           <button class="orb-alert-btn" id="orbAlertBtn" title="Alerts" aria-label="Alerts">
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V8a5 5 0 0 1 10 0v4l1 1H2zM6.5 14a1.5 1.5 0 0 0 3 0"/></svg>
             <span class="orb-alert-dot" aria-hidden="true"></span>
@@ -610,46 +621,108 @@ export class PanelLayoutManager implements AppModule {
         </div>
       </div>
       <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-      <nav class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-header">
-          <span class="mobile-menu-title">ORB</span>
-          <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <nav class="mobile-menu orb-sidebar" id="mobileMenu" aria-label="ORB navigation">
+        <!-- Background atmospherics -->
+        <svg class="orb-sb-stars" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          ${(() => {
+            let x = 7;
+            const r = () => (x = (x * 9301 + 49297) % 233280) / 233280;
+            return Array.from({ length: 60 }, () => {
+              const cx = (r() * 100).toFixed(2);
+              const cy = (r() * 100).toFixed(2);
+              const rad = (r() * 0.25 + 0.05).toFixed(3);
+              const o = (r() * 0.6 + 0.15).toFixed(2);
+              return `<circle cx="${cx}" cy="${cy}" r="${rad}" fill="#7fd9e8" opacity="${o}"/>`;
+            }).join('');
+          })()}
+        </svg>
+        <div class="orb-sb-scanline" aria-hidden="true"></div>
+        <div class="orb-sb-edge" aria-hidden="true"></div>
+
+        <!-- HEADER -->
+        <div class="orb-sb-header">
+          <div class="orb-sb-brand">
+            <img class="orb-sb-brand-logo" src="/favico/apple-touch-icon.png" alt="ORB" width="30" height="30" />
+            <div class="orb-sb-brand-text">
+              <div class="orb-sb-wordmark">ORB</div>
+              <div class="orb-sb-wordsub">OBSERVATORY · v${__APP_VERSION__}</div>
+            </div>
+          </div>
+          <button class="orb-sb-iconbtn" id="mobileMenuClose" aria-label="Close menu">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
           </button>
         </div>
-        <div class="mobile-menu-divider"></div>
-        ${(() => {
-        const variants = [
-          { key: 'full', icon: '🌍', label: t('header.world') },
-          { key: 'tech', icon: '💻', label: t('header.tech') },
-          { key: 'finance', icon: '📈', label: t('header.finance') },
-          { key: 'commodity', icon: '⛏️', label: t('header.commodity') },
-          { key: 'energy', icon: '⚡', label: t('header.energy') },
-        ];
-        return variants.map(v =>
-          `<button class="mobile-menu-item mobile-menu-variant ${v.key === SITE_VARIANT ? 'active' : ''}" data-variant="${v.key}">
-            <span class="mobile-menu-item-icon">${v.icon}</span>
-            <span class="mobile-menu-item-label">${v.label}</span>
-            ${v.key === SITE_VARIANT ? '<span class="mobile-menu-check">✓</span>' : ''}
-          </button>`
-        ).join('');
-      })()}
-        <div class="mobile-menu-divider"></div>
-        <button class="mobile-menu-item" id="mobileMenuRegion">
-          <span class="mobile-menu-item-icon">🌐</span>
-          <span class="mobile-menu-item-label">${t('components.deckgl.views.global')}</span>
-          <span class="mobile-menu-chevron">▸</span>
+
+        <!-- STATUS STRIP -->
+        <div class="orb-sb-status">
+          <span class="orb-sb-status-dot" aria-hidden="true"></span>
+          <span class="orb-sb-status-label">LIVE FEED</span>
+          <span class="orb-sb-status-sep">·</span>
+          <span class="orb-sb-status-mono" id="orbSidebarClock">UTC ··:··:··</span>
+        </div>
+
+        <!-- SECTORS -->
+        <div class="orb-sb-section-label">
+          <span>SECTORS</span><span class="orb-sb-section-count">05</span>
+        </div>
+        <nav class="orb-sb-nav">
+          ${(() => {
+            const sectorIcon: Record<string, string> = {
+              full:      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+              tech:      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1.5"/><path d="M9 6V3M15 6V3M9 21v-3M15 21v-3M6 9H3M6 15H3M21 9h-3M21 15h-3"/><rect x="10" y="10" width="4" height="4" rx=".5"/></svg>',
+              finance:   '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 6-8"/><path d="M14 6h4v4"/></svg>',
+              commodity: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5M3 8v5M21 8v5M12 8v15"/></svg>',
+              energy:    '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>',
+            };
+            const sectors = [
+              { key: 'full',      label: 'WORLD' },
+              { key: 'tech',      label: 'TECH' },
+              { key: 'finance',   label: 'FINANCE' },
+              { key: 'commodity', label: 'COMMODITY' },
+              { key: 'energy',    label: 'ENERGY' },
+            ];
+            return sectors.map((s, i) => {
+              const isActive = s.key === SITE_VARIANT;
+              return `<button class="orb-sb-nav-item${isActive ? ' is-active' : ''}" data-variant="${s.key}">
+                ${isActive ? `
+                  <span class="orb-sb-bracket br-tl"></span>
+                  <span class="orb-sb-bracket br-tr"></span>
+                  <span class="orb-sb-bracket br-bl"></span>
+                  <span class="orb-sb-bracket br-br"></span>
+                ` : ''}
+                <span class="orb-sb-nav-index">${String(i + 1).padStart(2, '0')}</span>
+                <span class="orb-sb-nav-icon">${sectorIcon[s.key]}</span>
+                <span class="orb-sb-nav-label">${s.label}</span>
+                ${isActive ? '<span class="orb-sb-nav-tag">ACTIVE</span>' : ''}
+              </button>`;
+            }).join('');
+          })()}
+        </nav>
+
+        <!-- SCOPE -->
+        <div class="orb-sb-divider">
+          <span class="orb-sb-divider-tick"></span>
+          <span class="orb-sb-divider-label">SCOPE</span>
+          <span class="orb-sb-divider-line"></span>
+        </div>
+        <button class="orb-sb-scope" id="mobileMenuRegion">
+          <svg class="orb-sb-scope-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>
+          <span class="orb-sb-scope-text">
+            <span class="orb-sb-scope-label">Global</span>
+            <span class="orb-sb-scope-sub">8 regions · all markets</span>
+          </span>
+          <svg class="orb-sb-scope-chev" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
         </button>
-        <div class="mobile-menu-divider"></div>
-        <button class="mobile-menu-item" id="mobileMenuSettings">
-          <span class="mobile-menu-item-icon">⚙️</span>
-          <span class="mobile-menu-item-label">${t('header.settings')}</span>
-        </button>
-        <button class="mobile-menu-item" id="mobileMenuTheme">
-          <span class="mobile-menu-item-icon">${getCurrentTheme() === 'dark' ? '☀️' : '🌙'}</span>
-          <span class="mobile-menu-item-label">${getCurrentTheme() === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-        </button>
-        <div class="mobile-menu-version">v${__APP_VERSION__}</div>
+
+        <div class="orb-sb-spacer"></div>
+
+        <!-- FOOTER -->
+        <div class="orb-sb-footer">
+          <a class="orb-sb-poweredby" href="https://parallax.kr/" target="_blank" rel="noopener">
+            <span class="orb-sb-poweredby-dot"></span>
+            POWERED BY <span class="orb-sb-poweredby-brand">PARALLAX</span>
+          </a>
+        </div>
       </nav>
       <div class="region-sheet-backdrop" id="regionSheetBackdrop"></div>
       <div class="region-bottom-sheet" id="regionBottomSheet">
@@ -706,7 +779,6 @@ export class PanelLayoutManager implements AppModule {
         </div>
         </div>
         <div class="panels-grid" id="panelsGrid"></div>
-        <button class="search-mobile-fab" id="searchMobileFab" aria-label="Search">\u{1F50D}</button>
       </div>
     `;
 

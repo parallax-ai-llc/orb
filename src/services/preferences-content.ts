@@ -171,17 +171,7 @@ export function renderPreferences(host: PreferencesHost): PreferencesResult {
   }
   html += `</select>`;
 
-  // Language
-  html += `<div class="ai-flow-section-label">${t('header.languageLabel')}</div>`;
-  html += `<select class="unified-settings-lang-select" id="us-language">`;
-  for (const lang of LANGUAGES) {
-    const selected = lang.code === currentLang ? ' selected' : '';
-    html += `<option value="${lang.code}"${selected}>${lang.flag} ${escapeHtml(lang.label)}</option>`;
-  }
-  html += `</select>`;
-  if (currentLang === 'vi') {
-    html += `<div class="ai-flow-toggle-desc">${t('components.languageSelector.mapLabelsFallbackVi')}</div>`;
-  }
+  // Language selector removed in Orb fork (English-only).
 
   html += `</div></details>`;
 

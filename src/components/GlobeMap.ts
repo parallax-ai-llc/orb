@@ -1848,6 +1848,19 @@ export class GlobeMap {
       </div>`;
     this.container.appendChild(el);
 
+    // Force position via inline styles — bypasses CSS cascade-layer priority.
+    el.style.setProperty('position', 'absolute', 'important');
+    el.style.setProperty('left', '10px', 'important');
+    el.style.setProperty('top', '63px', 'important');
+    el.style.setProperty('bottom', 'auto', 'important');
+    el.style.setProperty('z-index', '9999', 'important');
+    el.style.setProperty('display', 'flex', 'important');
+    el.style.setProperty('flex-direction', 'column', 'important');
+    el.style.setProperty('pointer-events', 'auto', 'important');
+    if (getComputedStyle(this.container).position === 'static') {
+      (this.container as HTMLElement).style.setProperty('position', 'relative', 'important');
+    }
+
     el.querySelectorAll('.layer-toggle input').forEach(input => {
       input.addEventListener('change', () => {
         const layer = (input as HTMLInputElement).closest('.layer-toggle')?.getAttribute('data-layer') as keyof MapLayers | null;

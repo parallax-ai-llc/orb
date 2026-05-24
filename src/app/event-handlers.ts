@@ -392,7 +392,7 @@ export class EventHandlerManager implements AppModule {
       this.ctx.map?.setLayers(this.ctx.mapLayers);
       track('map-layer-toggle', { layer: key, on: String(nextOn) });
     });
-    document.getElementById('searchMobileFab')?.addEventListener('click', () => {
+    document.getElementById('headerSearchBtn')?.addEventListener('click', () => {
       track('search-open', { source: 'fab' });
       openSearch();
     });
@@ -638,13 +638,29 @@ export class EventHandlerManager implements AppModule {
     closeBtn.addEventListener('click', () => this.closeMobileMenu());
 
     const isLocalDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-    menu.querySelectorAll<HTMLButtonElement>('.mobile-menu-variant').forEach(btn => {
+    menu.querySelectorAll<HTMLButtonElement>('.mobile-menu-variant, .orb-sb-nav-item').forEach(btn => {
       btn.addEventListener('click', () => {
         const variant = btn.dataset.variant;
         if (!variant || variant === SITE_VARIANT) return;
         void this.navigateToVariant(variant, { isLocalDev });
       });
     });
+
+    // Tick both the sidebar status clock and the header brand tagline clock
+    // once a second so the LIVE rows show real UTC. Both elements may be
+    // present at the same time; one shared timer drives both.
+    const sbClock = document.getElementById('orbSidebarClock');
+    const hdClock = document.getElementById('orbHeaderClock');
+    if (sbClock || hdClock) {
+      const pad = (n: number) => String(n).padStart(2, '0');
+      const fmt = () => {
+        const d = new Date();
+        if (sbClock) sbClock.textContent = `UTC ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
+        if (hdClock) hdClock.textContent = `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`;
+      };
+      fmt();
+      setInterval(fmt, 1000);
+    }
 
     document.getElementById('mobileMenuRegion')?.addEventListener('click', () => {
       this.closeMobileMenu();

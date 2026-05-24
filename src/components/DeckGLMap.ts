@@ -5062,6 +5062,21 @@ export class DeckGLMap {
 
     this.container.appendChild(toggles);
 
+    // Force position via inline styles — bypasses CSS cascade-layer priority
+    // (main.css base-layer rules with !important were winning over our override layer).
+    toggles.style.setProperty('position', 'absolute', 'important');
+    toggles.style.setProperty('left', '10px', 'important');
+    toggles.style.setProperty('top', '63px', 'important');
+    toggles.style.setProperty('bottom', 'auto', 'important');
+    toggles.style.setProperty('z-index', '9999', 'important');
+    toggles.style.setProperty('display', 'flex', 'important');
+    toggles.style.setProperty('flex-direction', 'column', 'important');
+    toggles.style.setProperty('pointer-events', 'auto', 'important');
+    // Ensure the positioning context exists on the container.
+    if (getComputedStyle(this.container).position === 'static') {
+      (this.container as HTMLElement).style.setProperty('position', 'relative', 'important');
+    }
+
     // Unlock premium layers when Pro status resolves. Pro can come from EITHER:
     //   1. Clerk role === 'pro' (subscribeAuthState fires on Clerk changes)
     //   2. Convex entitlement tier >= 1 (onEntitlementChange fires on Convex changes)

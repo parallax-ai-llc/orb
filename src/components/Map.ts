@@ -201,7 +201,20 @@ export class MapComponent {
     container.appendChild(this.wrapper);
     container.appendChild(this.createControls());
     container.appendChild(this.createTimeSlider());
-    container.appendChild(this.createLayerToggles());
+    const togglesEl = this.createLayerToggles();
+    container.appendChild(togglesEl);
+    // Force position via inline styles — bypasses CSS cascade-layer priority.
+    togglesEl.style.setProperty('position', 'absolute', 'important');
+    togglesEl.style.setProperty('left', '10px', 'important');
+    togglesEl.style.setProperty('top', '63px', 'important');
+    togglesEl.style.setProperty('bottom', 'auto', 'important');
+    togglesEl.style.setProperty('z-index', '9999', 'important');
+    togglesEl.style.setProperty('display', 'flex', 'important');
+    togglesEl.style.setProperty('flex-direction', 'column', 'important');
+    togglesEl.style.setProperty('pointer-events', 'auto', 'important');
+    if (getComputedStyle(container).position === 'static') {
+      (container as HTMLElement).style.setProperty('position', 'relative', 'important');
+    }
     container.appendChild(this.createLegend());
     this.healthCheckLoop = startSmartPollLoop(() => { this.runHealthCheck(); }, {
       intervalMs: 30_000,

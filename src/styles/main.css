@@ -12323,10 +12323,8 @@ a.prediction-link:hover {
     display: none !important;
   }
 
-  /* Hide layer toggle buttons on mobile - use fixed layers */
-  .layer-toggles {
-    display: none !important;
-  }
+  /* Layer toggle panel kept visible on mobile in the Orb fork — the panel
+     has its own collapse/expand control so footprint is user-managed. */
 
   /* Single-column panel layout on mobile */
   .panels-grid {

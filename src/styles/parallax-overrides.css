@@ -229,6 +229,20 @@
   flex-shrink: 0;
   overflow: hidden;
 }
+
+/* When the mobile "Hide Map" toggle collapses the map-section, the wrapping
+   row's viewport-relative height has to release too — otherwise the row
+   keeps reserving 50vh of empty space. */
+.orb-map-row:has(> .map-section.collapsed) {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+.orb-map-row > .map-section.collapsed {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
 .orb-map-row > .map-section {
   flex: 1 1 auto;
   min-width: 0;
@@ -411,59 +425,139 @@ body {
 
 /* ============================================================
    GLOBAL CHROME — header, status indicator, badges, brand
+   Observatory HUD tone: navy gradient + cyan accents + cyan bottom edge.
    ============================================================ */
 .header,
 .app-header {
-  background: var(--pxm-bg) !important;
-  border-bottom: 1px solid var(--pxm-line) !important;
-  font-family: var(--pxm-f-mono);
+  position: relative;
+  background: linear-gradient(180deg, #0a1320 0%, #070d14 100%) !important;
+  border-bottom: 0 !important;
+  font-family: var(--orb-display-font, "Space Grotesk", system-ui, sans-serif);
+}
+/* Thin cyan edge line at the bottom of the header */
+.header::after,
+.app-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79,209,228,0.35) 25%, rgba(79,209,228,0.35) 75%, transparent);
+  pointer-events: none;
 }
 
 .logo,
-.logo-mobile {
-  color: var(--pxm-amber) !important;
-  letter-spacing: 0.12em;
-  font-family: var(--pxm-f-mono);
+.logo-mobile,
+.orb-brand-wordmark {
+  color: var(--orb-signal-text, #E6FBFF) !important;
+  letter-spacing: 0.32em;
+  font-family: var(--orb-display-font, "Space Grotesk", system-ui, sans-serif);
   font-weight: 700;
+  text-shadow: 0 0 12px rgba(79,209,228,0.55);
 }
 
-/* Brand mark — Orb logo image prepended to .logo via background-image so
-   no HTML changes are needed. apple-touch-icon (180×180) crisp at 22px. */
-.logo::before {
-  content: "";
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  margin-right: 10px;
-  background: url('/favico/apple-touch-icon.png') center/contain no-repeat;
-  vertical-align: middle;
-}
+/* Old pseudo-element brand mark — superseded by .orb-brand-logo-img */
+.logo::before { content: none !important; }
 
-/* Brand block — logo + subtitle stacked */
+/* Brand block — logo image + wordmark + LIVE · UTC tagline */
 .orb-brand-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  border: 0;
+}
+.orb-brand-logo-img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(79,209,228,0.4));
+  flex-shrink: 0;
+}
+.orb-brand-text {
   display: inline-flex;
   flex-direction: column;
   gap: 2px;
   line-height: 1.1;
-  padding-right: 12px;
-  margin-right: 10px;
-  border-right: 1px solid var(--pxm-line);
 }
-.orb-brand-block .logo {
+.orb-brand-wordmark {
+  font-size: 14px !important;
+  letter-spacing: 0.32em !important;
+}
+.orb-brand-tagline {
   display: inline-flex;
   align-items: center;
-}
-.orb-brand-sub {
-  font-family: var(--pxm-f-mono);
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  color: var(--pxm-t-lo);
-  margin-left: 32px; /* align under the "ORB" text, past the 22px O mark + 10px margin */
+  gap: 5px;
+  font-family: var(--orb-mono-font, "JetBrains Mono", monospace);
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+  color: rgba(180,210,225,0.6);
   text-transform: uppercase;
+}
+.orb-brand-tagline-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--orb-signal, #4FD1E4);
+  box-shadow: 0 0 6px rgba(79,209,228,0.7);
+  flex-shrink: 0;
+}
+
+/* Cyan-bordered hamburger button + 1×24 divider between menu + brand. */
+.hamburger-btn {
+  width: 30px !important;
+  height: 30px !important;
+  border: 1px solid rgba(79,209,228,0.18) !important;
+  background: transparent !important;
+  color: rgba(180,210,225,0.85) !important;
+  border-radius: 4px;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+.hamburger-btn:hover {
+  border-color: var(--orb-signal-b1, rgba(79,209,228,0.35)) !important;
+  color: var(--orb-signal-text, #E6FBFF) !important;
+}
+.orb-topnav-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(79,209,228,0.12);
+  flex-shrink: 0;
+  display: inline-block;
 }
 
 /* Hide variant switcher in Orb branding — single product, no variants */
 .variant-switcher { display: none !important; }
+
+/* ============================================================
+   MOBILE MAP CONTROLS — un-hide layer toggles + size the time slider
+   sensibly. Base theme hides .layer-toggles entirely on mobile and lets
+   the time-slider stretch via `right: 56px`, which both fight the
+   Observatory HUD treatment.
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Time slider — content-sized, not full-width. The base theme stretched
+     it with `right: 56px`; release that and let it hug its buttons. */
+  .time-slider,
+  .deckgl-time-slider {
+    right: auto !important;
+    width: auto !important;
+    max-width: calc(100% - 24px);
+    padding: 4px 6px !important;
+  }
+  .time-slider-label { display: none !important; }
+
+  /* Layer toggles — cap height on mobile so it doesn't take over the map. */
+  .layer-toggles,
+  .deckgl-layer-toggles {
+    max-height: 25vh !important;
+  }
+  .deckgl-layer-toggles .toggle-list {
+    max-height: calc(25vh - 80px) !important;
+  }
+}
 
 /* ============================================================
    HEADER center pills — DEFCON / WATCH / FEEDS
@@ -698,24 +792,408 @@ body {
   color: var(--pxm-amber) !important;
 }
 
-/* Alert/notification bell in header-right */
-.orb-alert-btn {
+/* Alert/notification bell + header search icon in the actions row.
+   Observatory HUD treatment: 32×32 cyan-bordered icon button. */
+.orb-alert-btn,
+.orb-header-search-btn,
+.fullscreen-btn {
   position: relative;
-  display: inline-grid;
+  display: inline-grid !important;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  background: transparent;
-  border: 1px solid var(--pxm-line);
-  color: var(--pxm-t-md);
+  width: 32px;
+  height: 32px;
+  background: rgba(15,28,42,0.4);
+  border: 1px solid rgba(79,209,228,0.18) !important;
+  color: rgba(220,235,242,0.78);
   cursor: pointer;
+  border-radius: 4px;
+}
+.orb-alert-btn:hover,
+.orb-header-search-btn:hover,
+.fullscreen-btn:hover {
+  border-color: var(--orb-signal, #4FD1E4) !important;
+  color: var(--orb-signal-text, #E6FBFF);
+  background: rgba(79,209,228,0.08);
+}
+.orb-alert-dot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FF6B6B;
+  box-shadow: 0 0 6px #FF6B6B;
+}
+
+/* ============================================================
+   ORB SIDEBAR — Observatory HUD design (mobile drawer)
+   Sourced from /design_handoff_orb_sidebar.
+   ============================================================ */
+:root {
+  --orb-signal:          #4FD1E4;
+  --orb-signal-text:     #E6FBFF;
+  --orb-signal-glow:     rgba(79,209,228,.55);
+  --orb-signal-b1:       rgba(79,209,228,.35);
+  --orb-signal-b2:       rgba(79,209,228,.18);
+  --orb-signal-b3:       rgba(79,209,228,.12);
+  --orb-signal-b4:       rgba(79,209,228,.08);
+  --orb-fg-1:            #E6FBFF;
+  --orb-fg-2:            rgba(220,235,242,.78);
+  --orb-fg-3:            rgba(180,210,225,.6);
+  --orb-fg-4:            rgba(180,210,225,.45);
+  --orb-fg-5:            rgba(180,210,225,.4);
+  --orb-bg-top:          #070d14;
+  --orb-bg-mid:          #0a1320;
+  --orb-bg-bottom:       #060b13;
+  --orb-display-font:    "Space Grotesk", "Manrope", system-ui, sans-serif;
+  --orb-mono-font:       "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* The drawer container. Override base .mobile-menu padding / bg / font so the
+   HUD design takes full control of the surface. */
+.mobile-menu.orb-sidebar {
+  display: flex !important;
+  flex-direction: column;
+  width: 320px;
+  max-width: 88vw;
+  padding: 0 !important;
+  background: linear-gradient(180deg, var(--orb-bg-top) 0%, var(--orb-bg-mid) 50%, var(--orb-bg-bottom) 100%) !important;
+  color: var(--orb-fg-2);
+  font-family: var(--orb-display-font);
+  position: fixed;
+  overflow: hidden;
+  box-shadow: inset -1px 0 0 var(--orb-signal-b4);
+}
+
+/* Background atmospherics — full-height absolute layers, pointer-events: none */
+.orb-sb-stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 0;
+}
+.orb-sb-scanline {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(79,209,228,0.025) 3px, rgba(79,209,228,0.025) 4px);
+  pointer-events: none;
+  z-index: 0;
+}
+.orb-sb-edge {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--orb-signal-b1) 20%, var(--orb-signal-b1) 80%, transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Layer all real content above atmospherics. */
+.mobile-menu.orb-sidebar > *:not(.orb-sb-stars):not(.orb-sb-scanline):not(.orb-sb-edge) {
+  position: relative;
+  z-index: 2;
+}
+
+/* HEADER */
+.orb-sb-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid rgba(79,209,228,0.1);
+}
+.orb-sb-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex: 1;
+}
+.orb-sb-brand-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(79,209,228,0.4));
+}
+.orb-sb-wordmark {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  color: var(--orb-signal-text);
+  text-shadow: 0 0 12px rgba(79,209,228,0.6);
+  font-family: var(--orb-display-font);
+}
+.orb-sb-wordsub {
+  font-size: 9px;
+  font-family: var(--orb-mono-font);
+  color: rgba(180,210,225,0.55);
+  letter-spacing: 0.18em;
+  margin-top: 2px;
+}
+.orb-sb-iconbtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid rgba(79,209,228,0.15);
+  color: rgba(180,210,225,0.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.orb-sb-iconbtn:hover {
+  border-color: var(--orb-signal-b1);
+  color: var(--orb-signal-text);
+}
+
+/* STATUS STRIP */
+.orb-sb-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  font-family: var(--orb-mono-font);
+  font-size: 9.5px;
+  color: rgba(180,210,225,0.65);
+  background: rgba(79,209,228,0.04);
+  border-bottom: 1px solid rgba(79,209,228,0.08);
+}
+.orb-sb-status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--orb-signal);
+  box-shadow: 0 0 8px var(--orb-signal);
+  flex-shrink: 0;
+}
+.orb-sb-status-label {
+  color: var(--orb-signal);
+  letter-spacing: 0.14em;
+}
+.orb-sb-status-sep { opacity: 0.4; }
+.orb-sb-status-mono { letter-spacing: 0.05em; }
+
+/* SECTION LABEL (SECTORS) */
+.orb-sb-section-label {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 18px 8px;
+  font-family: var(--orb-mono-font);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: rgba(180,210,225,0.5);
+}
+.orb-sb-section-count {
+  color: var(--orb-signal);
+}
+
+/* SECTOR NAV ITEMS */
+.orb-sb-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  gap: 2px;
+}
+.orb-sb-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+  background: transparent;
+  border: 0;
+  color: rgba(220,235,242,0.78);
+  font-family: var(--orb-display-font);
+  cursor: pointer;
+  text-align: left;
+  transition: background 150ms ease;
+}
+.orb-sb-nav-item:hover {
+  background: rgba(79,209,228,0.06);
+}
+.orb-sb-nav-item.is-active {
+  background: linear-gradient(90deg, rgba(79,209,228,0.16), rgba(79,209,228,0.04));
+}
+.orb-sb-nav-index {
+  width: 16px;
+  flex-shrink: 0;
+  font-family: var(--orb-mono-font);
+  font-size: 10px;
+  color: rgba(180,210,225,0.4);
+  letter-spacing: 0.06em;
+}
+.orb-sb-nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(180,210,225,0.55);
+  flex-shrink: 0;
+}
+.orb-sb-nav-item.is-active .orb-sb-nav-icon { color: var(--orb-signal); }
+.orb-sb-nav-label {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: rgba(220,235,242,0.78);
+}
+.orb-sb-nav-item.is-active .orb-sb-nav-label { color: var(--orb-signal-text); }
+.orb-sb-nav-tag {
+  font-family: var(--orb-mono-font);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  color: var(--orb-signal);
+  border: 1px solid var(--orb-signal-b2);
+  padding: 2px 5px;
   border-radius: 2px;
 }
-.orb-alert-btn:hover {
-  border-color: var(--pxm-amber);
-  color: var(--pxm-amber);
-  background: var(--pxm-amber-dim);
+
+/* Active-state corner brackets */
+.orb-sb-bracket {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
 }
+.orb-sb-bracket.br-tl { top: 4px; left: 4px;  border-top: 1px solid var(--orb-signal); border-left:  1px solid var(--orb-signal); }
+.orb-sb-bracket.br-tr { top: 4px; right: 4px; border-top: 1px solid var(--orb-signal); border-right: 1px solid var(--orb-signal); }
+.orb-sb-bracket.br-bl { bottom: 4px; left: 4px;  border-bottom: 1px solid var(--orb-signal); border-left:  1px solid var(--orb-signal); }
+.orb-sb-bracket.br-br { bottom: 4px; right: 4px; border-bottom: 1px solid var(--orb-signal); border-right: 1px solid var(--orb-signal); }
+
+/* SCOPE DIVIDER + BUTTON */
+.orb-sb-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 18px 10px;
+}
+.orb-sb-divider-tick {
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--orb-signal);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+.orb-sb-divider-label {
+  font-family: var(--orb-mono-font);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: rgba(180,210,225,0.5);
+}
+.orb-sb-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--orb-signal-b3);
+}
+.orb-sb-scope {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 18px;
+  padding: 12px;
+  background: rgba(15,28,42,0.5);
+  border: 1px solid var(--orb-signal-b3);
+  border-radius: 4px;
+  color: var(--orb-fg-2);
+  cursor: pointer;
+  font-family: var(--orb-display-font);
+  text-align: left;
+}
+.orb-sb-scope:hover { border-color: var(--orb-signal-b1); }
+.orb-sb-scope-icon { color: var(--orb-signal); flex-shrink: 0; }
+.orb-sb-scope-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
+.orb-sb-scope-label {
+  font-size: 13px;
+  color: var(--orb-signal-text);
+}
+.orb-sb-scope-sub {
+  font-family: var(--orb-mono-font);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: rgba(180,210,225,0.55);
+  margin-top: 2px;
+}
+.orb-sb-scope-chev {
+  color: rgba(180,210,225,0.5);
+  flex-shrink: 0;
+}
+
+.orb-sb-spacer { flex: 1; }
+
+/* FOOTER */
+.orb-sb-footer {
+  padding: 14px 18px 18px;
+  border-top: 1px solid rgba(79,209,228,0.1);
+}
+.orb-sb-poweredby {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--orb-mono-font);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: rgba(180,210,225,0.55);
+  text-decoration: none;
+}
+.orb-sb-poweredby-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--orb-signal);
+  box-shadow: 0 0 6px var(--orb-signal);
+}
+.orb-sb-poweredby-brand {
+  color: var(--orb-fg-1);
+  letter-spacing: 0.18em;
+}
+.orb-sb-poweredby:hover .orb-sb-poweredby-brand {
+  text-shadow: 0 0 10px var(--orb-signal-glow);
+}
+
+/* Orb header actions row — sibling of .header-right so it's NOT hit by the
+   base theme's `@media (max-width: 768px) { .header-right { display: none } }`
+   rule. Always visible at the rightmost edge of the header. */
+.orb-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+/* Search icon button is mobile-only — desktop uses the ⌘K search-btn in
+   .header-right. */
+@media (min-width: 769px) {
+  .orb-header-search-btn { display: none !important; }
+}
+
+/* On mobile (≤768px), shrink the header-left so it doesn't push the actions
+   off-screen. Also drop the fullscreen icon — irrelevant on touch devices. */
+@media (max-width: 768px) {
+  .header { gap: 6px !important; }
+  .header-left {
+    flex: 0 1 auto !important;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .orb-header-actions .fullscreen-btn { display: none !important; }
+}
+
+/* Hide the legacy floating search FAB — header icon replaces it. */
+.search-mobile-fab { display: none !important; }
 /* Hide the legacy Intelligence Findings 🎯 badge BUTTON but keep its
    dropdown child reachable + visible. Critical: overflow:visible so the
    absolutely-positioned dropdown can render outside the 0×0 box; clip-path
