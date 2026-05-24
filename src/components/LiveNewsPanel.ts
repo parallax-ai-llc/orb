@@ -928,9 +928,7 @@ export class LiveNewsPanel extends Panel {
 
     requestAnimationFrame(() => overlay.classList.add('active'));
 
-    import('@/live-channels-window').then(async ({ initLiveChannelsWindow }) => {
-      await initLiveChannelsWindow(container);
-    }).catch(console.error);
+    container.innerHTML = '<div style="padding:24px;color:var(--text-secondary)">Channel management is not available in this build.</div>';
 
     const close = () => {
       overlay.remove();

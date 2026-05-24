@@ -368,7 +368,6 @@ export class EventHandlerManager implements AppModule {
         dropdown.style.right = `${Math.max(8, window.innerWidth - r.right)}px`;
         dropdown.style.left = 'auto';
       });
-      track('orb-alerts-open');
     });
     // Orb LAYERS rail — wired to the real MapLayers system.
     // Each .pxm-layer carries data-layer matching a key in MapLayers
@@ -391,7 +390,7 @@ export class EventHandlerManager implements AppModule {
       this.ctx.mapLayers[key] = nextOn;
       row.classList.toggle('on', nextOn);
       this.ctx.map?.setLayers(this.ctx.mapLayers);
-      track('orb-layer-toggle', { layer: key, on: nextOn });
+      track('map-layer-toggle', { layer: key, on: String(nextOn) });
     });
     document.getElementById('searchMobileFab')?.addEventListener('click', () => {
       track('search-open', { source: 'fab' });
@@ -1482,62 +1481,14 @@ export class EventHandlerManager implements AppModule {
 
   setupMapWidthResize(): void {
     // Width resize handle removed in Orb fork. Clear any stale stored width
-    // so the map always renders at the default 60% column. Without this,
-    // a previously-saved narrow width persisted in localStorage and made
-    // the map render almost invisibly at certain viewports.
+    // so the map always renders at the default column. Without this, a
+    // previously-saved narrow width persisted in localStorage and made the
+    // map render almost invisibly at certain viewports.
     try {
       localStorage.removeItem('map-col-width');
       const mc = document.querySelector<HTMLElement>('.main-content');
       mc?.style.removeProperty('--map-col-width');
     } catch { /* private mode */ }
-    return;
-    // eslint-disable-next-line @typescript-eslint/no-unreachable, no-unreachable
-    const mainContent = document.querySelector<HTMLElement>('.main-content');
-    const widthHandle = document.getElementById('mapWidthResizeHandle');
-    if (!mainContent || !widthHandle) return;
-
-    const saved = localStorage.getItem('map-col-width');
-    if (saved) mainContent.style.setProperty('--map-col-width', saved);
-
-    let isResizing = false;
-    let startX = 0;
-    let startTotalWidth = 0;
-    let startColPx = 0;
-
-    this.boundMapWidthEndResizeHandler = () => {
-      if (!isResizing) return;
-      isResizing = false;
-      this.ctx.map?.setIsResizing(false);
-      this.ctx.map?.resize();
-      document.body.classList.remove('map-width-resizing');
-      widthHandle.classList.remove('resizing');
-      const current = mainContent.style.getPropertyValue('--map-col-width');
-      if (current) localStorage.setItem('map-col-width', current);
-    };
-
-    widthHandle.addEventListener('mousedown', (e) => {
-      isResizing = true;
-      startX = e.clientX;
-      startTotalWidth = mainContent.offsetWidth;
-      const raw = mainContent.style.getPropertyValue('--map-col-width') || '60%';
-      startColPx = startTotalWidth * (parseFloat(raw) / 100);
-      this.ctx.map?.setIsResizing(true);
-      document.body.classList.add('map-width-resizing');
-      widthHandle.classList.add('resizing');
-      e.preventDefault();
-    });
-
-    this.boundMapWidthResizeMoveHandler = (e: MouseEvent) => {
-      if (!isResizing) return;
-      const delta = e.clientX - startX;
-      const newPct = Math.max(25, Math.min(75, ((startColPx + delta) / startTotalWidth) * 100));
-      mainContent.style.setProperty('--map-col-width', `${newPct.toFixed(1)}%`);
-      this.ctx.map?.resize();
-    };
-
-    document.addEventListener('mousemove', this.boundMapWidthResizeMoveHandler);
-    document.addEventListener('mouseup', this.boundMapWidthEndResizeHandler);
-    window.addEventListener('blur', this.boundMapWidthEndResizeHandler);
   }
 
   setupMapPin(): void {
