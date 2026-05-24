@@ -1,0 +1,816 @@
+/* ============================================================
+   PARALLAX MONITOR — visual overrides on top of base main.css
+   Sourced from /design handoff (Visual System v3.2).
+   ============================================================ */
+
+:root {
+  /* Design tokens (mirror /design/styles.css) */
+  --pxm-void:        #07090d;
+  --pxm-bg:          #0b0e14;
+  --pxm-bg-2:        #0e131b;
+  --pxm-surface:     #11171f;
+  --pxm-surface-2:   #161d27;
+  --pxm-surface-3:   #1c2530;
+  --pxm-line:        #1f2a36;
+  --pxm-line-2:      #2a3744;
+  --pxm-line-hot:    #3a4a5c;
+
+  --pxm-t-hi:        #d8e0e9;
+  --pxm-t-md:        #97a3b1;
+  --pxm-t-lo:        #5d6b7a;
+  --pxm-t-dim:       #3d4a59;
+
+  /* Primary accent shifted from amber → cyan to match the Orb logo. The
+     `--pxm-amber*` token names are kept as aliases pointing to cyan so
+     every existing rule that references them is recolored in one place. */
+  --pxm-amber:       #4ec8d4;
+  --pxm-amber-hot:   #6ee2ec;
+  --pxm-amber-dim:   rgba(78,200,212,0.14);
+  --pxm-cyan:        #4ec8d4;
+  --pxm-cyan-dim:    rgba(78,200,212,0.14);
+  --pxm-red:         #d8584e;
+  --pxm-red-hot:     #ff7062;
+  --pxm-green:       #5fc488;
+  --pxm-blue:        #5a8fd8;
+  --pxm-violet:      #9d7cd8;
+
+  --pxm-classbar-h:  18px;
+  --pxm-f-mono:      "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Monaco, monospace;
+  --pxm-f-sans:      "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Promote Inter to the default body font (mono stays for chrome/labels). */
+  --font-mono:       var(--pxm-f-mono);
+  --font-body-base:  var(--pxm-f-sans);
+  --font-body:       var(--pxm-f-sans);
+
+  /* ----- Override World Monitor's base tokens ----- */
+  /* Backgrounds */
+  --bg:              var(--pxm-void);
+  --bg-secondary:    var(--pxm-bg);
+  --surface:         var(--pxm-surface);
+  --surface-hover:   var(--pxm-surface-2);
+  --surface-active:  var(--pxm-surface-3);
+
+  /* Borders */
+  --border:          var(--pxm-line);
+  --border-strong:   var(--pxm-line-hot);
+  --border-subtle:   var(--pxm-line);
+
+  /* Text */
+  --text:            var(--pxm-t-hi);
+  --text-secondary:  var(--pxm-t-md);
+  --text-dim:        var(--pxm-t-lo);
+  --text-muted:      var(--pxm-t-lo);
+  --text-faint:      var(--pxm-t-dim);
+  --text-ghost:      var(--pxm-t-dim);
+  --accent:          var(--pxm-amber);
+
+  /* Scrollbar */
+  --scrollbar-thumb:       var(--pxm-line-2);
+  --scrollbar-thumb-hover: var(--pxm-line-hot);
+
+  /* Input */
+  --input-bg:        var(--pxm-surface);
+
+  /* Panels */
+  --panel-bg:        var(--pxm-surface);
+  --panel-border:    var(--pxm-line);
+
+  /* Map — deeper navy, amber gridlines */
+  --map-bg:          var(--pxm-void);
+  --map-grid:        rgba(78,200,212,0.06);
+  --map-country:     #1a232e;
+  --map-stroke:      var(--pxm-line-2);
+
+  /* Status / signal recolor */
+  --status-live:     var(--pxm-amber);
+  --status-cached:   var(--pxm-cyan);
+  --green:           var(--pxm-green);
+  --yellow:          var(--pxm-amber);
+  --semantic-positive: var(--pxm-amber);
+  --semantic-normal:  var(--pxm-green);
+
+  /* World Monitor uses --primary in .time-btn.active and a few other rules,
+     but never declares it anywhere. Aliasing to amber so active states are
+     visible (without this, .time-btn.active was bold + bg-colored text on
+     the same bg → invisible click target). */
+  --primary:         var(--pxm-amber);
+}
+
+/* ============================================================
+   THEATER TABS — horizontal strip below the header
+   ============================================================ */
+.pxm-theater-bar {
+  display: flex;
+  align-items: stretch;
+  background: var(--pxm-bg);
+  border-bottom: 1px solid var(--pxm-line);
+  height: 30px;
+  min-height: 30px;
+  max-height: 30px;
+  padding: 0 12px;
+  font-family: var(--pxm-f-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pxm-t-md);
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+  flex-wrap: nowrap;
+}
+.pxm-tab { flex-shrink: 0; }
+.pxm-theater-query {
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+/* Narrow viewports — hide query block, tabs scroll into hidden overflow */
+@media (max-width: 1100px) {
+  .pxm-theater-query { display: none; }
+}
+@media (max-width: 768px) {
+  .pxm-theater-bar { display: none; }
+}
+.pxm-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
+  border-right: 1px solid var(--pxm-line);
+}
+.pxm-tab:first-child { border-left: 1px solid var(--pxm-line); }
+.pxm-tab:hover { color: var(--pxm-t-hi); background: var(--pxm-amber-dim); }
+.pxm-tab.is-on {
+  color: var(--pxm-amber);
+  background: var(--pxm-amber-dim);
+  box-shadow: inset 0 -2px 0 var(--pxm-amber);
+}
+.pxm-tab-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--pxm-t-dim);
+}
+.pxm-tab.is-on .pxm-tab-dot { background: var(--pxm-amber); }
+.pxm-theater-spacer { flex: 1; }
+.pxm-theater-query {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+}
+.pxm-theater-query-label {
+  font-size: 9px;
+  color: var(--pxm-t-dim);
+  letter-spacing: 0.12em;
+}
+.pxm-theater-search {
+  background: var(--pxm-surface);
+  border: 1px solid var(--pxm-line);
+  color: var(--pxm-t-md);
+  font-family: var(--pxm-f-mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  padding: 4px 9px;
+  width: 240px;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.pxm-theater-search:hover {
+  border-color: var(--pxm-amber);
+  color: var(--pxm-t-hi);
+}
+.pxm-theater-search::placeholder { color: var(--pxm-t-dim); }
+
+.pxm-theater-time-seg {
+  display: flex;
+  border: 1px solid var(--pxm-line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.pxm-time-btn {
+  background: transparent;
+  border: 0;
+  color: var(--pxm-t-md);
+  font-family: var(--pxm-f-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-right: 1px solid var(--pxm-line);
+}
+.pxm-time-btn:last-child { border-right: 0; }
+.pxm-time-btn:hover { color: var(--pxm-amber); background: var(--pxm-amber-dim); }
+.pxm-time-btn.is-on { color: var(--pxm-amber); background: var(--pxm-amber-dim); }
+
+/* ============================================================
+   LAYERS RAIL — sibling of the map inside .orb-map-row.
+   The row is bounded to the map's intrinsic 50vh so the panels-grid
+   below gets the remaining viewport space. Rail height matches the
+   row via align-items: stretch.
+   ============================================================ */
+/* Default (flex-column .main-content at < 1600px): orb-map-row is a
+   normal-flow block with explicit viewport-relative height, mirroring the
+   original .map-section sizing. panels-grid flows below naturally. */
+.orb-map-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  height: 50vh;
+  min-height: 350px;
+  max-height: 90vh;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.orb-map-row > .map-section {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  border: 1px solid var(--pxm-line);
+}
+
+/* Grid layout at >= 1600px or .desktop-grid — orb-map-row becomes the grid
+   item in column 1 row 1 and takes the full cell height (panels-grid sits
+   in column 3 alongside it instead of below). */
+@media (min-width: 1600px) {
+  .orb-map-row {
+    grid-column: 1;
+    grid-row: 1;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+  }
+}
+.main-content.desktop-grid > .orb-map-row {
+  grid-column: 1;
+  grid-row: 1;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+}
+.pxm-layers-rail {
+  display: none;
+  font-family: var(--pxm-f-mono);
+  font-size: 11px;
+  color: var(--pxm-t-md);
+  flex: 0 0 230px;
+  width: 230px;
+  background: var(--pxm-bg);
+  border-right: 1px solid var(--pxm-line);
+  overflow-y: auto;
+}
+@media (min-width: 1024px) {
+  .pxm-layers-rail { display: block; }
+}
+.pxm-rail-section {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--pxm-line);
+}
+.pxm-rail-section--last { border-bottom: 0; }
+.pxm-rail-h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--pxm-t-lo);
+  margin-bottom: 8px;
+}
+.pxm-rail-id { color: var(--pxm-t-dim); font-size: 9px; }
+.pxm-rail-filter {
+  width: 100%;
+  background: var(--pxm-surface);
+  border: 1px solid var(--pxm-line);
+  color: var(--pxm-t-md);
+  font-family: var(--pxm-f-mono);
+  font-size: 10px;
+  padding: 5px 8px;
+  outline: none;
+}
+.pxm-rail-filter:focus { border-color: var(--pxm-amber); }
+.pxm-layer-list { display: flex; flex-direction: column; gap: 2px; }
+.pxm-layer {
+  display: grid;
+  grid-template-columns: 14px 14px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  cursor: pointer;
+  color: var(--pxm-t-lo);
+  transition: background 0.12s, color 0.12s;
+}
+.pxm-layer:hover { background: var(--pxm-surface-2); color: var(--pxm-t-hi); }
+.pxm-layer.on { color: var(--pxm-t-hi); }
+.pxm-layer.on.alert { color: var(--pxm-amber-hot); }
+.pxm-chk {
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--pxm-line-hot);
+  background: transparent;
+  display: inline-block;
+}
+.pxm-layer.on .pxm-chk {
+  background: var(--pxm-amber);
+  border-color: var(--pxm-amber);
+}
+.pxm-sw {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+}
+.pxm-sw.dot { border-radius: 50%; }
+.pxm-sw.sq  { /* square — default */ }
+.pxm-sw.tri {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid;
+}
+.pxm-layer-name { font-size: 11px; }
+.pxm-layer-ct {
+  color: var(--pxm-t-dim);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+.pxm-threat-legend { display: flex; flex-direction: column; gap: 4px; }
+.pxm-tk-row { display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--pxm-t-md); letter-spacing: 0.08em; }
+.pxm-tk-sw { width: 12px; height: 8px; display: inline-block; }
+.pxm-tk-sw.dot { width: 8px; height: 8px; border-radius: 50%; }
+
+.pxm-operator { display: flex; align-items: center; gap: 8px; }
+.pxm-operator-avatar {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--pxm-amber);
+  color: var(--pxm-amber);
+  display: grid;
+  place-items: center;
+  background: var(--pxm-surface-3);
+  font-family: var(--pxm-f-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.pxm-operator-name { color: var(--pxm-t-hi); font-size: 11px; font-family: var(--pxm-f-sans); }
+.pxm-operator-status { color: var(--pxm-green); font-size: 9px; letter-spacing: 0.08em; }
+
+/* ============================================================
+   CLASSIFICATION BANNER (kept as utility, NOT mounted by default)
+   ============================================================ */
+.pxm-class-bar {
+  height: var(--pxm-classbar-h);
+  background: #b88a30;
+  color: #1a1208;
+  font: 600 10px/1 var(--pxm-f-mono);
+  letter-spacing: 0.18em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1000;
+  flex-shrink: 0;
+  user-select: none;
+}
+.pxm-class-bar > span {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.pxm-class-bar .pxm-pip {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #1a1208;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pxm-class-bar--bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+body {
+  background: var(--pxm-void);
+}
+
+/* ============================================================
+   GLOBAL CHROME — header, status indicator, badges, brand
+   ============================================================ */
+.header,
+.app-header {
+  background: var(--pxm-bg) !important;
+  border-bottom: 1px solid var(--pxm-line) !important;
+  font-family: var(--pxm-f-mono);
+}
+
+.logo,
+.logo-mobile {
+  color: var(--pxm-amber) !important;
+  letter-spacing: 0.12em;
+  font-family: var(--pxm-f-mono);
+  font-weight: 700;
+}
+
+/* Brand mark — Orb logo image prepended to .logo via background-image so
+   no HTML changes are needed. apple-touch-icon (180×180) crisp at 22px. */
+.logo::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 10px;
+  background: url('/favico/apple-touch-icon.png') center/contain no-repeat;
+  vertical-align: middle;
+}
+
+/* Brand block — logo + subtitle stacked */
+.orb-brand-block {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.1;
+  padding-right: 12px;
+  margin-right: 10px;
+  border-right: 1px solid var(--pxm-line);
+}
+.orb-brand-block .logo {
+  display: inline-flex;
+  align-items: center;
+}
+.orb-brand-sub {
+  font-family: var(--pxm-f-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--pxm-t-lo);
+  margin-left: 32px; /* align under the "ORB" text, past the 22px O mark + 10px margin */
+  text-transform: uppercase;
+}
+
+/* Hide variant switcher in Orb branding — single product, no variants */
+.variant-switcher { display: none !important; }
+
+/* ============================================================
+   HEADER center pills — DEFCON / WATCH / FEEDS
+   ============================================================ */
+.orb-header-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--pxm-line);
+}
+.orb-header-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  border: 1px solid var(--pxm-line);
+  border-radius: 2px;
+  font-family: var(--pxm-f-mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  white-space: nowrap;
+}
+.orb-pill-k { color: var(--pxm-t-lo); }
+.orb-pill-v { color: var(--pxm-t-hi); font-weight: 600; }
+.orb-pill-v--ok { color: var(--pxm-green); }
+
+@media (max-width: 1024px) {
+  .orb-header-pills { display: none; }
+}
+
+/* ============================================================
+   FOOTER — DEFCON / WATCH / FEEDS pills + brand block
+   ============================================================ */
+.site-footer {
+  background: var(--pxm-bg) !important;
+  border-top: 1px solid var(--pxm-line) !important;
+  color: var(--pxm-t-md);
+  font-family: var(--pxm-f-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.site-footer-name {
+  color: var(--pxm-amber) !important;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+.site-footer-sub {
+  color: var(--pxm-t-lo) !important;
+  letter-spacing: 0.14em;
+  font-size: 10px;
+}
+.site-footer-copy {
+  color: var(--pxm-t-lo) !important;
+  letter-spacing: 0.08em;
+}
+
+/* Footer brand mark */
+.site-footer-mark {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--pxm-amber);
+  display: grid;
+  place-items: center;
+  color: var(--pxm-amber);
+  font-family: var(--pxm-f-mono);
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* DEFCON / WATCH / FEEDS pills */
+.site-footer-meta {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+.footer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid var(--pxm-line);
+  border-radius: 2px;
+  font-family: var(--pxm-f-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+.footer-pill-k { color: var(--pxm-t-lo); }
+.footer-pill-v {
+  color: var(--pxm-t-hi);
+  font-weight: 600;
+}
+.footer-pill-v--ok { color: var(--pxm-green); }
+
+.status-dot,
+.skeleton-dot {
+  background: var(--pxm-amber) !important;
+}
+.status-indicator {
+  color: var(--pxm-amber) !important;
+  font-family: var(--pxm-f-mono);
+  letter-spacing: 0.08em;
+}
+.beta-badge,
+.version {
+  color: var(--pxm-amber) !important;
+  border-color: var(--pxm-amber) !important;
+}
+
+/* ============================================================
+   PANELS — sharper borders, mono headers, amber accents
+   ============================================================ */
+.panel {
+  background: var(--pxm-surface) !important;
+  border: 1px solid var(--pxm-line) !important;
+  border-radius: 0;
+}
+.panel-header {
+  background: var(--pxm-bg-2) !important;
+  border-bottom: 1px solid var(--pxm-line) !important;
+}
+.panel-title {
+  font-family: var(--pxm-f-mono);
+  color: var(--pxm-t-hi) !important;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.panel-id-tag {
+  font-family: var(--pxm-f-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--pxm-t-dim);
+  margin-left: 4px;
+  user-select: none;
+}
+.panel-header-error {
+  background: rgba(216, 88, 78, 0.12) !important;
+  border-bottom-color: rgba(216, 88, 78, 0.55) !important;
+}
+
+/* Panel hover lift — keep, just retint */
+.panel:hover {
+  border-color: var(--pxm-line-hot) !important;
+}
+
+/* ============================================================
+   BUTTONS — mono, uppercase, 1px line border
+   ============================================================ */
+.btn,
+.search-btn,
+.copy-link-btn,
+.fullscreen-btn,
+.tv-mode-btn,
+.region-select,
+.mobile-search-btn,
+.mobile-settings-btn {
+  background: transparent !important;
+  border: 1px solid var(--pxm-line) !important;
+  color: var(--pxm-t-md) !important;
+  font-family: var(--pxm-f-mono) !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+.btn:hover,
+.search-btn:hover,
+.copy-link-btn:hover,
+.fullscreen-btn:hover,
+.region-select:hover,
+.mobile-search-btn:hover,
+.mobile-settings-btn:hover {
+  border-color: var(--pxm-amber) !important;
+  color: var(--pxm-amber) !important;
+  background: var(--pxm-amber-dim) !important;
+}
+.btn.is-on,
+.btn.active {
+  border-color: var(--pxm-amber) !important;
+  color: var(--pxm-amber) !important;
+  background: var(--pxm-amber-dim) !important;
+}
+.search-btn kbd {
+  background: var(--pxm-surface-2);
+  border: 1px solid var(--pxm-line);
+  color: var(--pxm-t-md);
+}
+
+/* Map's top-left time slider — pre-existing World Monitor feature, restyled
+   to match the Orb palette. Buttons are tighter and amber-active. */
+.time-slider {
+  background: var(--pxm-bg) !important;
+  border: 1px solid var(--pxm-line) !important;
+  border-radius: 2px !important;
+  font-family: var(--pxm-f-mono);
+}
+.time-slider-label {
+  color: var(--pxm-t-lo) !important;
+  letter-spacing: 0.12em;
+}
+.time-btn {
+  background: transparent !important;
+  border: 1px solid var(--pxm-line) !important;
+  color: var(--pxm-t-md) !important;
+  font-family: var(--pxm-f-mono) !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.time-btn:hover {
+  border-color: var(--pxm-amber) !important;
+  color: var(--pxm-amber) !important;
+  background: var(--pxm-amber-dim) !important;
+}
+.time-btn.active {
+  background: var(--pxm-amber) !important;
+  border-color: var(--pxm-amber) !important;
+  color: var(--pxm-void) !important;
+  font-weight: 700;
+}
+
+/* Credit / GitHub links — sit in header */
+.credit-link,
+.github-link {
+  color: var(--pxm-t-lo) !important;
+  font-family: var(--pxm-f-mono);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+.credit-link:hover,
+.github-link:hover {
+  color: var(--pxm-amber) !important;
+}
+
+/* Alert/notification bell in header-right */
+.orb-alert-btn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid var(--pxm-line);
+  color: var(--pxm-t-md);
+  cursor: pointer;
+  border-radius: 2px;
+}
+.orb-alert-btn:hover {
+  border-color: var(--pxm-amber);
+  color: var(--pxm-amber);
+  background: var(--pxm-amber-dim);
+}
+/* Hide the legacy Intelligence Findings 🎯 badge BUTTON but keep its
+   dropdown child reachable + visible. Critical: overflow:visible so the
+   absolutely-positioned dropdown can render outside the 0×0 box; clip-path
+   or overflow:hidden would clip the entire dropdown panel. */
+.intel-findings-badge {
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  font-size: 0 !important;
+  color: transparent !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+.intel-findings-badge:hover,
+.intel-findings-badge:focus,
+.intel-findings-badge.status-high,
+.intel-findings-badge.status-low,
+.intel-findings-badge.status-none,
+.intel-findings-badge.pulse {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.intel-findings-badge .findings-icon,
+.intel-findings-badge .findings-count {
+  display: none !important;
+}
+/* Dropdown sits anchored to the bell button via fixed positioning set in
+   the orbAlertBtn click handler. */
+.intel-findings-dropdown.open {
+  display: block !important;
+  position: fixed !important;
+}
+.orb-alert-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pxm-red);
+  box-shadow: 0 0 0 1px var(--pxm-bg);
+}
+
+/* ============================================================
+   SKELETON — match new palette so pre-paint matches booted state
+   ============================================================ */
+.skeleton-shell {
+  background: var(--pxm-void) !important;
+}
+.skeleton-header {
+  background: var(--pxm-bg) !important;
+  border-bottom-color: var(--pxm-line) !important;
+}
+.skeleton-pill {
+  background: var(--pxm-surface-2) !important;
+}
+.skeleton-main {
+  background: var(--pxm-void) !important;
+}
+.skeleton-map {
+  background: var(--pxm-bg-2) !important;
+  border-color: var(--pxm-line) !important;
+}
+.skeleton-map-bar {
+  background: var(--pxm-bg) !important;
+  border-bottom-color: var(--pxm-line) !important;
+}
+.skeleton-panel {
+  background: var(--pxm-surface) !important;
+  border-color: var(--pxm-line) !important;
+}
+.skeleton-panel-header {
+  border-bottom-color: var(--pxm-line) !important;
+}
+
+/* ============================================================
+   FOCUS / SELECTION
+   ============================================================ */
+*:focus-visible {
+  outline: 1px solid var(--pxm-amber);
+  outline-offset: 1px;
+}
+::selection {
+  background: var(--pxm-amber-dim);
+  color: var(--pxm-amber-hot);
+}
+
+/* ============================================================
+   SCROLLBARS — slimmer, amber on hover
+   ============================================================ */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--pxm-void); }
+::-webkit-scrollbar-thumb { background: var(--pxm-line-2); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--pxm-amber); }

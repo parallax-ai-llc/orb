@@ -1,0 +1,5 @@
+Contact: https://github.com/parallax-ai-llc/orb/security/advisories
+Policy: https://github.com/parallax-ai-llc/orb/security/advisories
+Preferred-Languages: en
+Canonical: https://orb.parallax.kr/.well-known/security.txt
+Expires: 2027-03-02T00:00:00.000Z
