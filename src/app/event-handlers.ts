@@ -38,7 +38,6 @@ import {
   INTEL_SOURCES,
 } from '@/config';
 import { resolveNewsCategories, enabledNewsCategoryKeys } from '@/config/feed-resolution';
-import { VARIANT_META } from '@/config/variant-meta';
 import { isDesktopRuntime } from '@/services/runtime';
 import {
   saveSnapshot,
@@ -1032,26 +1031,17 @@ export class EventHandlerManager implements AppModule {
 
   private async navigateToVariant(
     variant: string,
-    options: { href?: string; isLocalDev: boolean },
+    _options: { href?: string; isLocalDev: boolean },
   ): Promise<void> {
     trackVariantSwitch(SITE_VARIANT, variant);
     await this.exitFullscreenForNavigation();
-
-    if (this.ctx.isDesktopApp || options.isLocalDev) {
-      localStorage.setItem('orb-variant', variant);
-      window.location.reload();
-      return;
-    }
-
-    const target = options.href || VARIANT_META[variant]?.url;
-    if (!target) return;
-    try {
-      const parsed = new URL(target, window.location.href);
-      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return;
-      window.location.href = parsed.toString();
-    } catch {
-      return;
-    }
+    // Orb is a single-domain product — every variant lives at the same
+    // origin and is selected via the orb-variant localStorage key. The
+    // upstream worldmonitor fork shipped subdomain navigation in
+    // production; that would route users off-site to the original
+    // project, so we collapse to the localhost branch for all envs.
+    localStorage.setItem('orb-variant', variant);
+    window.location.reload();
   }
 
   toggleFullscreen(): void {
