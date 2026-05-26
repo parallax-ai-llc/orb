@@ -30,6 +30,7 @@ import {
   getDefaultLiveChannels,
   loadChannelsFromStorage,
   LiveWebcamsPanel,
+  PanPanel,
   PinnedWebcamsPanel,
   CIIPanel,
   CascadePanel,
@@ -1233,6 +1234,10 @@ export class PanelLayoutManager implements AppModule {
       this.ctx.panels['live-webcams'] = new LiveWebcamsPanel();
     }
 
+    if (this.shouldCreatePanel('pan')) {
+      this.ctx.panels['pan'] = new PanPanel();
+    }
+
     if (this.shouldCreatePanel('windy-webcams')) {
       this.ctx.panels['windy-webcams'] = new PinnedWebcamsPanel();
     }
@@ -1459,6 +1464,16 @@ export class PanelLayoutManager implements AppModule {
           allOrder.splice(webcamsIdx, 1);
           const afterNews = allOrder.indexOf('live-news') + 1;
           allOrder.splice(afterNews, 0, 'live-webcams');
+        }
+
+        const panIdx = allOrder.indexOf('pan');
+        const webcamsAnchor = allOrder.indexOf('live-webcams');
+        const newsAnchor = allOrder.indexOf('live-news');
+        const desiredPanIdx = (webcamsAnchor !== -1 ? webcamsAnchor : newsAnchor) + 1;
+        if (panIdx !== -1 && panIdx !== desiredPanIdx) {
+          allOrder.splice(panIdx, 1);
+          const insertAt = (webcamsAnchor !== -1 ? allOrder.indexOf('live-webcams') : allOrder.indexOf('live-news')) + 1;
+          allOrder.splice(insertAt, 0, 'pan');
         }
       }
 

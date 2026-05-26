@@ -1,0 +1,35 @@
+# Orb
+
+> Orb is an advanced OSINT intelligence console offering real-time situational awareness across conflict zones, financial markets, military activity, and critical infrastructure in a single dashboard. The hosted instance at orb.parallax.kr is a free, non-commercial public-interest project operated by Parallax AI with no signup, paywall, ads, or user-data monetization.
+
+Orb aggregates open-source intelligence feeds (ACLED, UCDP, ADS-B, AIS, NASA FIRMS, USGS, Marine Traffic, and many more) and renders them on an interactive 3D globe and 2D map. Five dashboard variants — Global, Tech, Finance, Commodity, Energy — share one codebase and switch via local preference. The project is a fork of [koala73/worldmonitor](https://github.com/koala73/worldmonitor) by Elie Habib, licensed under AGPL-3.0.
+
+## Core capabilities
+
+- [Real-time conflict tracking](https://orb.parallax.kr/): ACLED and UCDP armed-conflict event data, geocoded and time-filtered.
+- [Military ADS-B flight monitoring](https://orb.parallax.kr/): live military aircraft positions worldwide.
+- [Maritime AIS ship tracking](https://orb.parallax.kr/): commercial and naval vessel positions, port activity, and chokepoint traffic.
+- [Satellite fire detection](https://orb.parallax.kr/): NASA FIRMS active fire and thermal anomaly detection.
+- [Nuclear and critical infrastructure mapping](https://orb.parallax.kr/): reactors, refineries, pipelines, grid nodes, submarine cables.
+- [Internet outage and submarine cable monitoring](https://orb.parallax.kr/): cable status, BGP anomalies, country-level connectivity dips.
+- [Country Instability Index (CII)](https://orb.parallax.kr/): composite scoring across conflict, economic, and infrastructure signals.
+- [Markets and macro](https://orb.parallax.kr/): equities, commodities, FX, and crypto with cross-asset correlations.
+- [Earthquakes and natural disasters](https://orb.parallax.kr/): USGS seismic feed, tsunami advisories, severe weather alerts.
+- [Cyber threat detection](https://orb.parallax.kr/): public CTI feeds and incident telemetry.
+
+## Project
+
+- [Project homepage](https://orb.parallax.kr/): the live dashboard, no signup required.
+- [Source repository](https://github.com/parallax-ai-llc/orb): the AGPL-3.0 source for this fork.
+- [Upstream project — World Monitor](https://github.com/koala73/worldmonitor): the parent project Orb is derived from.
+- [License (AGPL-3.0)](https://github.com/parallax-ai-llc/orb/blob/main/LICENSE): full license text.
+- [README](https://github.com/parallax-ai-llc/orb/blob/main/README.md): scope, what is included, what is intentionally removed, AGPL obligations.
+
+## Operator
+
+- [Parallax AI on GitHub](https://github.com/parallax-ai-llc): operator of the hosted instance.
+
+## Optional
+
+- [Security policy](https://orb.parallax.kr/.well-known/security.txt): contact for responsible disclosure.
+- [Web app manifest](https://orb.parallax.kr/site.webmanifest): PWA manifest.

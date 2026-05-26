@@ -4,7 +4,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api|assets|favico|map-styles|data|textures|sw\\.js|workbox-[a-f0-9]+\\.js|manifest\\.webmanifest|offline\\.html|site\\.webmanifest|\\.well-known).*)",
+      "source": "/((?!api|assets|favico|map-styles|data|textures|sw\\.js|workbox-[a-f0-9]+\\.js|manifest\\.webmanifest|offline\\.html|site\\.webmanifest|robots\\.txt|llms\\.txt|\\.well-known).*)",
       "destination": "/index.html"
     }
   ],

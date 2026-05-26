@@ -29,6 +29,7 @@ export * from './LlmStatusIndicator';
 export * from './GdeltIntelPanel';
 export * from './LiveNewsPanel';
 export * from './LiveWebcamsPanel';
+export * from './PanPanel';
 export * from './PinnedWebcamsPanel';
 export * from './CIIPanel';
 export * from './CascadePanel';

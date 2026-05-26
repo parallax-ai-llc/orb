@@ -289,6 +289,7 @@
   },
   "panels": {
     "liveNews": "Live News",
+    "pan": "PAN",
     "markets": "Markets",
     "marketImplications": "AI Market Implications",
     "map": "Global Situation",
@@ -2141,6 +2142,11 @@
     "climateNews": {
       "infoTooltip": "<strong>Climate News</strong> Latest environment and climate intelligence from Carbon Brief, UNEP, NASA, The Guardian, and other authoritative sources. Updated every 30 minutes.",
       "loadError": "Climate news temporarily unavailable"
+    },
+    "pan": {
+      "infoTooltip": "<strong>PAN — Parallax AI Network</strong> Three machine readings of every event, synthesised into one. PAN is the official autonomous news service operated by Parallax AI LLC. Source: <a href=\"https://pan.parallax.kr\" target=\"_blank\" rel=\"noopener\">pan.parallax.kr</a>.",
+      "loadError": "PAN news temporarily unavailable",
+      "empty": "No PAN articles available"
     },
     "chatAnalyst": {
       "infoTooltip": "<strong>WM Analyst</strong> AI analyst with live context across geopolitical, market, military, and economic domains. Powered by Claude with real-time data injected from active WorldMonitor feeds."

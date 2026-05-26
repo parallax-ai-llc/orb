@@ -2848,6 +2848,109 @@ a.hub-top-story {
   opacity: 0.7;
 }
 
+/* ── PAN (Parallax AI Network) panel ──────────────────────────────── */
+
+.pan-source-badge {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint, #999);
+  text-decoration: none;
+  padding: 1px 6px;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+  border-radius: 3px;
+  margin-left: 6px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.pan-source-badge:hover {
+  color: var(--accent, #4ade80);
+  border-color: var(--accent, #4ade80);
+}
+
+.pan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.pan-card {
+  display: block;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
+  transition: background 0.15s;
+}
+.pan-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.pan-card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-faint, #888);
+  margin-bottom: 4px;
+}
+
+.pan-card__meta .pan-dot {
+  opacity: 0.4;
+}
+
+.pan-tag {
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary, #ccc);
+  font-weight: 700;
+}
+.pan-tag--war { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+.pan-tag--tech { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+.pan-tag--biz { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+.pan-tag--energy { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+
+.pan-country {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  color: var(--text-muted, #aaa);
+}
+
+.pan-card__title {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-primary, #eee);
+  margin-bottom: 4px;
+}
+
+.pan-card__summary {
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--text-muted, #aaa);
+  opacity: 0.85;
+  margin-bottom: 6px;
+}
+
+.pan-sentiment {
+  display: flex;
+  height: 3px;
+  width: 100%;
+  border-radius: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+.pan-sentiment__seg { display: block; height: 100%; }
+.pan-sentiment__pos { background: #22c55e; }
+.pan-sentiment__neu { background: #6b7280; }
+.pan-sentiment__neg { background: #ef4444; }
+
 /* ── Latest Brief panel ───────────────────────────────────────────── */
 
 .latest-brief-card {

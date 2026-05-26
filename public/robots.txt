@@ -1,0 +1,12 @@
+# robots.txt for orb.parallax.kr
+# Orb is a public OSINT dashboard. All crawling is allowed.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://orb.parallax.kr/sitemap.xml
+
+# Machine-readable site summary for LLMs and AI agents
+# https://llmstxt.org/
+# See: https://orb.parallax.kr/llms.txt
