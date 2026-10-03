@@ -29,7 +29,7 @@
     <meta property="og:url" content="https://orb.parallax.kr/" />
     <meta property="og:title" content="Orb | Advanced OSINT Intelligence" />
     <meta property="og:description" content="Advanced OSINT intelligence console. Real-time situational awareness across conflict zones, markets, military, and infrastructure signals." />
-    <meta property="og:image" content="/favico/og-image.png" />
+    <meta property="og:image" content="https://orb.parallax.kr/favico/og-image.png" />
     <meta property="og:image:alt" content="Orb — advanced OSINT intelligence console" />
     <meta property="og:site_name" content="Orb" />
     <meta property="og:locale" content="en_US" />
@@ -39,7 +39,7 @@
     <meta name="twitter:url" content="https://orb.parallax.kr/" />
     <meta name="twitter:title" content="Orb | Advanced OSINT Intelligence" />
     <meta name="twitter:description" content="Advanced OSINT intelligence console. Real-time situational awareness across conflict zones, markets, military, and infrastructure signals." />
-    <meta name="twitter:image" content="/favico/og-image.png" />
+    <meta name="twitter:image" content="https://orb.parallax.kr/favico/og-image.png" />
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -60,7 +60,12 @@
         "name": "Sanghoon Han",
         "url": "https://www.instagram.com/imnothansanghoon",
         "jobTitle": "CEO",
-        "sameAs": ["https://www.instagram.com/imnothansanghoon", "https://github.com/parallax-ai-llc/orb"]
+        "sameAs": ["https://www.instagram.com/imnothansanghoon"]
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Parallax AI",
+        "url": "https://parallax.kr/"
       },
       "featureList": [
         "Real-time conflict tracking (ACLED, UCDP)",
@@ -74,10 +79,9 @@
         "Earthquake and natural disaster alerts",
         "Cyber threat detection"
       ],
-      "screenshot": "/favico/og-image.png",
+      "screenshot": "https://orb.parallax.kr/favico/og-image.png",
       "sameAs": [
-        "https://github.com/parallax-ai-llc/orb",
-        "https://www.instagram.com/imnothansanghoon",
+        "https://github.com/parallax-ai-llc/orb"
       ],
       "keywords": "OSINT dashboard, geopolitical monitoring, real-time intelligence, conflict tracker, threat intelligence, ADS-B tracking, AIS ship tracking, global risk monitoring, situational awareness"
     }
@@ -176,6 +180,13 @@
   </head>
   <body>
     <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap">Orb | Advanced OSINT Intelligence</h1>
+    <!-- Crawlable links in the initial HTML (the dashboard itself is rendered by JS). Visually hidden like the h1 above. -->
+    <nav aria-label="Orb links" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap">
+      <a href="https://orb.parallax.kr/" tabindex="-1">Orb dashboard</a>
+      <a href="https://orb.parallax.kr/llms.txt" tabindex="-1">About Orb (llms.txt)</a>
+      <a href="https://github.com/parallax-ai-llc/orb" tabindex="-1">Orb source code on GitHub</a>
+      <a href="https://parallax.kr/" tabindex="-1">Parallax AI</a>
+    </nav>
     <div id="app">
       <!-- Pre-render skeleton: visible instantly, replaced when JS calls renderLayout() -->
       <div class="skeleton-shell" aria-hidden="true">
@@ -217,7 +228,7 @@
     </aside>
     <noscript>
       <div style="max-width:800px;margin:0 auto;padding:40px 20px;font-family:system-ui,sans-serif;color:#e5e5e5;background:#07090d;">
-        <h1>Orb — Advanced OSINT Intelligence</h1>
+        <p style="font-size:1.5em;font-weight:700;margin:0 0 .5em">Orb — Advanced OSINT Intelligence</p>
         <p>Real-time situational awareness across conflict zones, markets, military activity, and critical infrastructure. JavaScript is required.</p>
         <h2>Features</h2>
         <ul>
