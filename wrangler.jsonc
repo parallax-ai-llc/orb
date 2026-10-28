@@ -1,0 +1,21 @@
+// Cloudflare Workers deployment for orb.parallax.kr (replaces Vercel).
+// `npm run cf:deploy` builds the Vite app into dist/, regenerates the api/ route table and deploys.
+// Secrets (none are set today) go in with `npx wrangler secret put <NAME>`; handlers read them from process.env.
+{
+  "name": "orb-web",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "none"
+  },
+  "services": [{ "binding": "PAN", "service": "pan-web" }],
+  "observability": { "enabled": true },
+  // Takes effect only while the orb DNS record is proxied (orange cloud).
+  "routes": [{ "pattern": "orb.parallax.kr/*", "zone_name": "parallax.kr" }],
+  "workers_dev": true,
+  "preview_urls": false
+}
